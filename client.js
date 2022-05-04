@@ -1,5 +1,6 @@
+const {ApolloClient, InMemoryCache} = require("@apollo/client");
+
 const core = require('@actions/core');
-import {ApolloClient, InMemoryCache} from "@apollo/client";
 
 const checkEnvironment = (logging) => {
     // URL
