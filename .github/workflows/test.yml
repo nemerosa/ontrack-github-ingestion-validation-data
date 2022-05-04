@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Raw validation data test
+      - id: raw-validation-data-test
         uses: ./
         with:
           validation-data: |-
@@ -29,7 +29,7 @@ jobs:
               passed: 15
               skipped: 8
               failed: 5
-      - name: Specific validation data test
+      - id: specific-validation-data-test
         uses: ./
         with:
           test-summary-validation-data: |-
