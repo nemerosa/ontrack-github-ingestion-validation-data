@@ -21518,11 +21518,11 @@ const parseMetricsValidationData = (path) => {
     };
 };
 
-const parseValidationData = (type, path, logging) => {
+const parseValidationData = async (type, path, logging) => {
     if (type === 'metrics') {
         return parseMetricsValidationData(path);
     } else if (type === 'junit') {
-        return junit.parseJUnitFiles(path, logging);
+        return await junit.parseJUnitFiles(path, logging);
     } else {
         throw Error(`File validation data type not supported: ${type}`);
     }
@@ -21598,7 +21598,7 @@ try {
     // Logging the validation information
     core.info(`Validation:  ${validation}`);
     // Logging of the validation data
-    core.info(`Validation:\n${YAML.stringify(validationData)}`);
+    core.info(`Validation:\n${JSON.stringify(validationData)}`);
 } catch (error) {
     core.setFailed(error.message);
 }

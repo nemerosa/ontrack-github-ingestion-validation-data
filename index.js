@@ -16,11 +16,11 @@ const parseMetricsValidationData = (path) => {
     };
 };
 
-const parseValidationData = (type, path, logging) => {
+const parseValidationData = async (type, path, logging) => {
     if (type === 'metrics') {
         return parseMetricsValidationData(path);
     } else if (type === 'junit') {
-        return junit.parseJUnitFiles(path, logging);
+        return await junit.parseJUnitFiles(path, logging);
     } else {
         throw Error(`File validation data type not supported: ${type}`);
     }
