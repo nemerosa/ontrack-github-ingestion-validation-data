@@ -5,7 +5,7 @@ GitHub Action used to inject data into validations in Ontrack.
 
 ## Inputs
 
-## `repository`
+### `repository`
 
 The name of the repository where the validation is to be set. If not set, the current repository will be used.
 
