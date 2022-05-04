@@ -118,3 +118,26 @@ position: 2.1
 speed: 15.0
 acceleration: 7.1
 ```
+
+###### `junit`
+
+Gets a test summary from a JUnit XML report.
+
+Example:
+
+```yaml
+with:
+  file-validation-data-type: junit
+  file-validation-data-path: path/to/report/directory
+```
+
+The path must be a directory containing XML JUnit report. For example:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="..." tests="7" skipped="0" failures="0" errors="0" timestamp="2022-05-04T09:45:17" hostname="..." time="3.538">
+    <!-- ... -->
+</testsuite>
+```
+
+> Only the `tests`, `skipped`, `failures` and `errors` attributes of the `testsuite` root are used. The rest of the attributes and elements is ignored.

@@ -36,6 +36,12 @@ jobs:
             passed: 15
             skipped: 8
             failed: 5
+      - id: file-validation-data-test
+        uses: ./
+        with:
+          file-validation-data-type: junit
+          file-validation-data-path: test/junit
+
       - id: raw-validation-data-metrics
         uses: ./
         with:
