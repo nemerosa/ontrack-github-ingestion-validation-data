@@ -1,5 +1,5 @@
-const {ApolloClient, InMemoryCache} = require("@apollo/client");
-
+const fetch = require('cross-fetch');
+const {ApolloClient, HttpLink, InMemoryCache} = require("@apollo/client");
 const core = require('@actions/core');
 
 const checkEnvironment = (logging) => {
@@ -28,6 +28,7 @@ const setValidationDataByRunId = (clientEnvironment, config, logging) => {
     }
     // Client initialization
     const client = new ApolloClient({
+        link: new HttpLink({ uri: '/graphql', fetch }),
         uri: clientEnvironment.url,
         cache: new InMemoryCache(),
         headers: {

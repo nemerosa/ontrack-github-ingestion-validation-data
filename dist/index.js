@@ -4,8 +4,8 @@ require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 /***/ 3164:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const {ApolloClient, InMemoryCache} = __nccwpck_require__(7856);
-
+const fetch = __nccwpck_require__(9805);
+const {ApolloClient, HttpLink, InMemoryCache} = __nccwpck_require__(7856);
 const core = __nccwpck_require__(2186);
 
 const checkEnvironment = (logging) => {
@@ -34,6 +34,7 @@ const setValidationDataByRunId = (clientEnvironment, config, logging) => {
     }
     // Client initialization
     const client = new ApolloClient({
+        link: new HttpLink({ uri: '/graphql', fetch }),
         uri: clientEnvironment.url,
         cache: new InMemoryCache(),
         headers: {
@@ -6384,6 +6385,35 @@ module.exports = function (xs, fn) {
 var isArray = Array.isArray || function (xs) {
     return Object.prototype.toString.call(xs) === '[object Array]';
 };
+
+
+/***/ }),
+
+/***/ 9805:
+/***/ ((module, exports, __nccwpck_require__) => {
+
+const nodeFetch = __nccwpck_require__(467)
+const realFetch = nodeFetch.default || nodeFetch
+
+const fetch = function (url, options) {
+  // Support schemaless URIs on the server for parity with the browser.
+  // Ex: //github.com/ -> https://github.com/
+  if (/^\/\//.test(url)) {
+    url = 'https:' + url
+  }
+  return realFetch.call(this, url, options)
+}
+
+fetch.ponyfill = true
+
+module.exports = exports = fetch
+exports.fetch = fetch
+exports.Headers = nodeFetch.Headers
+exports.Request = nodeFetch.Request
+exports.Response = nodeFetch.Response
+
+// Needed for TypeScript consumers without esModuleInterop.
+exports["default"] = fetch
 
 
 /***/ }),
