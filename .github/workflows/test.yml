@@ -29,3 +29,10 @@ jobs:
               passed: 15
               skipped: 8
               failed: 5
+      - name: Specific validation data test
+        uses: ./
+        with:
+          test-summary-validation-data: |-
+            passed: 15
+            skipped: 8
+            failed: 5
