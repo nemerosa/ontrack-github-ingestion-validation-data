@@ -1,6 +1,38 @@
 require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ 8138:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+const {XMLParser} = __nccwpck_require__(2603);
+const fs = __nccwpck_require__(7147);
+
+async function parseJUnitFile(path) {
+    const parser = new XMLParser({
+        ignoreAttributes: false
+    });
+    const xml = parser.parse(fs.readFileSync(path));
+    console.log("suite", xml);
+    const suite = xml.testsuite;
+    const tests = Number(suite["@_tests"]);
+    const skipped = Number(suite["@_skipped"]);
+    const failures = Number(suite["@_failures"]);
+    const errors = Number(suite["@_errors"]);
+    const localFailed = failures + errors;
+    const localSkipped = skipped;
+    const localPassed = tests - localFailed;
+    return {
+        passed: localPassed,
+        skipped: localSkipped,
+        failed: localFailed
+    };
+}
+
+module.exports = parseJUnitFile;
+
+
+/***/ }),
+
 /***/ 7351:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -21444,8 +21476,8 @@ const core = __nccwpck_require__(2186);
 const github = __nccwpck_require__(5438);
 const glob = __nccwpck_require__(8090);
 const YAML = __nccwpck_require__(4083);
-const {XMLParser} = __nccwpck_require__(2603);
 const fs = __nccwpck_require__(7147);
+const junit = __nccwpck_require__(8138);
 
 const parseMetricsValidationData = (path) => {
     const file = fs.readFileSync(path, 'utf8');
@@ -21462,21 +21494,11 @@ const parseJUnitValidationData = async (path) => {
     let totalPassed = 0;
     let totalSkipped = 0;
     let totalFailed = 0;
-    const parser = new XMLParser();
     for await (const file of globber.globGenerator()) {
-        const xml = parser.parse(file);
-        console.log("suite", xml);
-        const suite = xml.testsuite;
-        const tests = suite["@tests"];
-        const skipped = suite["@skipped"];
-        const failures = suite["@failures"];
-        const errors = suite["@errors"];
-        const localFailed = failures + errors;
-        const localSkipped = skipped;
-        const localPassed = tests - localFailed;
-        totalPassed += localPassed;
-        totalSkipped += localSkipped;
-        totalFailed += localFailed;
+        const summary = await junit(file);
+        totalPassed += summary.passed;
+        totalSkipped += summary.skipped;
+        totalFailed += summary.failed;
     }
     return {
         type: "net.nemerosa.ontrack.extension.general.validation.TestSummaryValidationDataType",

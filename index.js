@@ -4,8 +4,8 @@ const core = require('@actions/core');
 const github = require('@actions/github');
 const glob = require('@actions/glob');
 const YAML = require('yaml');
-const {XMLParser} = require('fast-xml-parser');
 const fs = require('fs');
+const junit = require('./junit');
 
 const parseMetricsValidationData = (path) => {
     const file = fs.readFileSync(path, 'utf8');
@@ -22,21 +22,11 @@ const parseJUnitValidationData = async (path) => {
     let totalPassed = 0;
     let totalSkipped = 0;
     let totalFailed = 0;
-    const parser = new XMLParser();
     for await (const file of globber.globGenerator()) {
-        const xml = parser.parse(file);
-        console.log("suite", xml);
-        const suite = xml.testsuite;
-        const tests = suite["@tests"];
-        const skipped = suite["@skipped"];
-        const failures = suite["@failures"];
-        const errors = suite["@errors"];
-        const localFailed = failures + errors;
-        const localSkipped = skipped;
-        const localPassed = tests - localFailed;
-        totalPassed += localPassed;
-        totalSkipped += localSkipped;
-        totalFailed += localFailed;
+        const summary = await junit(file);
+        totalPassed += summary.passed;
+        totalSkipped += summary.skipped;
+        totalFailed += summary.failed;
     }
     return {
         type: "net.nemerosa.ontrack.extension.general.validation.TestSummaryValidationDataType",
