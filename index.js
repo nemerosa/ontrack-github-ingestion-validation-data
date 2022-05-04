@@ -24,7 +24,7 @@ const parseJUnitValidationData = async (path) => {
     let totalFailed = 0;
     const parser = new XMLParser();
     for await (const file of globber.globGenerator()) {
-        const xml = parser.parse(fs.readFileSync(file));
+        const xml = parser.parse(file);
         const suite = xml.testsuite;
         const tests = suite["@tests"];
         const skipped = suite["@skipped"];
