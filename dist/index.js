@@ -4,8 +4,30 @@ require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 /***/ 8138:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
+const glob = __nccwpck_require__(8090);
 const {XMLParser} = __nccwpck_require__(2603);
 const fs = __nccwpck_require__(7147);
+
+async function parseJUnitFiles(path) {
+    const globber = await glob.create(`${path}/*.xml`);
+    let totalPassed = 0;
+    let totalSkipped = 0;
+    let totalFailed = 0;
+    for await (const file of globber.globGenerator()) {
+        const summary = await parseJUnitFile(file);
+        totalPassed += summary.passed;
+        totalSkipped += summary.skipped;
+        totalFailed += summary.failed;
+    }
+    return {
+        type: "net.nemerosa.ontrack.extension.general.validation.TestSummaryValidationDataType",
+        data: {
+            passed: totalPassed,
+            skipped: totalSkipped,
+            failed: totalFailed
+        }
+    };
+}
 
 async function parseJUnitFile(path) {
     const parser = new XMLParser({
@@ -27,7 +49,10 @@ async function parseJUnitFile(path) {
     };
 }
 
-module.exports = parseJUnitFile;
+module.exports = {
+    parseJUnitFiles: parseJUnitFiles,
+    parseJUnitFile: parseJUnitFile
+};
 
 
 /***/ }),
@@ -21473,7 +21498,6 @@ var __webpack_exports__ = {};
 
 const core = __nccwpck_require__(2186);
 const github = __nccwpck_require__(5438);
-const glob = __nccwpck_require__(8090);
 const YAML = __nccwpck_require__(4083);
 const fs = __nccwpck_require__(7147);
 const junit = __nccwpck_require__(8138);
@@ -21488,32 +21512,11 @@ const parseMetricsValidationData = (path) => {
     };
 };
 
-const parseJUnitValidationData = async (path) => {
-    const globber = await glob.create(`${path}/*.xml`);
-    let totalPassed = 0;
-    let totalSkipped = 0;
-    let totalFailed = 0;
-    for await (const file of globber.globGenerator()) {
-        const summary = await junit(file);
-        totalPassed += summary.passed;
-        totalSkipped += summary.skipped;
-        totalFailed += summary.failed;
-    }
-    return {
-        type: "net.nemerosa.ontrack.extension.general.validation.TestSummaryValidationDataType",
-        data: {
-            passed: totalPassed,
-            skipped: totalSkipped,
-            failed: totalFailed
-        }
-    };
-};
-
 const parseValidationData = (type, path) => {
     if (type === 'metrics') {
         return parseMetricsValidationData(path);
     } else if (type === 'junit') {
-        return parseJUnitValidationData(path);
+        return junit.parseJUnitFiles(path);
     } else {
         throw Error(`File validation data type not supported: ${type}`);
     }

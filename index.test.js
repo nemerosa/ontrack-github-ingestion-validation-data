@@ -1,9 +1,18 @@
 const junit = require('./junit');
 
-test('parsing of JUnit reports', async () => {
+test('parsing of one JUnit report', async () => {
     const path = 'test/junit/TEST-net.nemerosa.ontrack.common.VersionTest.xml';
-    const summary = await junit(path);
+    const summary = await junit.parseJUnitFile(path);
     expect(summary.passed).toBe(16);
     expect(summary.skipped).toBe(0);
     expect(summary.failed).toBe(1);
+});
+
+test('parsing of JUnit reports', async () => {
+    const path = 'test/junit';
+    const summary = await junit.parseJUnitFiles(path);
+    expect(summary.type).toBe("net.nemerosa.ontrack.extension.general.validation.TestSummaryValidationDataType");
+    expect(summary.data.passed).toBe(25);
+    expect(summary.data.skipped).toBe(0);
+    expect(summary.data.failed).toBe(1);
 });

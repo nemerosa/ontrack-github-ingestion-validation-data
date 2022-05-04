@@ -2,7 +2,6 @@
 
 const core = require('@actions/core');
 const github = require('@actions/github');
-const glob = require('@actions/glob');
 const YAML = require('yaml');
 const fs = require('fs');
 const junit = require('./junit');
@@ -17,32 +16,11 @@ const parseMetricsValidationData = (path) => {
     };
 };
 
-const parseJUnitValidationData = async (path) => {
-    const globber = await glob.create(`${path}/*.xml`);
-    let totalPassed = 0;
-    let totalSkipped = 0;
-    let totalFailed = 0;
-    for await (const file of globber.globGenerator()) {
-        const summary = await junit(file);
-        totalPassed += summary.passed;
-        totalSkipped += summary.skipped;
-        totalFailed += summary.failed;
-    }
-    return {
-        type: "net.nemerosa.ontrack.extension.general.validation.TestSummaryValidationDataType",
-        data: {
-            passed: totalPassed,
-            skipped: totalSkipped,
-            failed: totalFailed
-        }
-    };
-};
-
 const parseValidationData = (type, path) => {
     if (type === 'metrics') {
         return parseMetricsValidationData(path);
     } else if (type === 'junit') {
-        return parseJUnitValidationData(path);
+        return junit.parseJUnitFiles(path);
     } else {
         throw Error(`File validation data type not supported: ${type}`);
     }
