@@ -1,8 +1,20 @@
 name: "ontrack-github-ingestion-validation-data"
 description: "GitHub Action used to inject data into validations in Ontrack."
 inputs:
+  owner:
+    description: 'Name of the repository owner to target'
+    required: false
+    default: ''
   repository:
     description: 'Name of the repository to target'
+    required: false
+    default: ''
+  build-name:
+    description: 'Name of the build to target'
+    required: false
+    default: ''
+  build-label:
+    description: 'Release property (label) of the build to target'
     required: false
     default: ''
 runs:
