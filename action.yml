@@ -1,0 +1,10 @@
+name: "ontrack-github-ingestion-validation-data"
+description: "GitHub Action used to inject data into validations in Ontrack."
+inputs:
+  repository:
+    description: 'Name of the repository to target'
+    required: false
+    default: ''
+runs:
+  using: 'node16'
+  main: 'index.js'

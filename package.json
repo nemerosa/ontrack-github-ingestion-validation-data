@@ -1,0 +1,24 @@
+{
+  "name": "ontrack-github-ingestion-validation-data",
+  "version": "0.0.1",
+  "description": "GitHub Action used to inject data into validations in Ontrack.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nemerosa/ontrack-github-ingestion-validation-data.git"
+  },
+  "keywords": [],
+  "author": "Damien Coraboeuf <damien.coraboeuf@nemerosa.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nemerosa/ontrack-github-ingestion-validation-data/issues"
+  },
+  "homepage": "https://github.com/nemerosa/ontrack-github-ingestion-validation-data#readme",
+  "dependencies": {
+    "@actions/core": "^1.7.0",
+    "@actions/github": "^5.0.1"
+  }
+}
