@@ -1,6 +1,39 @@
 require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ 3164:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+const core = __nccwpck_require__(2186);
+
+const checkEnvironment = (logging) => {
+    // URL
+    const url = process.env['ONTRACK_URL'];
+    if (!url) {
+        if (logging) core.info("ONTRACK_URL environment variable is not defined.")
+        return false;
+    }
+    // Token
+    const token = process.env['ONTRACK_TOKEN'];
+    if (!token) {
+        if (logging) core.info("ONTRACK_TOKEN secret is not defined.")
+        return false;
+    }
+    // OK
+    return {
+        url: url,
+        token: token,
+    };
+};
+
+const client = {
+    checkEnvironment: checkEnvironment
+}
+
+module.exports = client;
+
+/***/ }),
+
 /***/ 8138:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
@@ -21507,6 +21540,7 @@ const github = __nccwpck_require__(5438);
 const YAML = __nccwpck_require__(4083);
 const fs = __nccwpck_require__(7147);
 const junit = __nccwpck_require__(8138);
+const client = __nccwpck_require__(3164);
 
 const parseMetricsValidationData = (path) => {
     const file = fs.readFileSync(path, 'utf8');
@@ -21530,8 +21564,16 @@ const parseValidationData = async (type, path, logging) => {
 
 async function run() {
     try {
-        // Getting all the arguments
         const logging = core.getBooleanInput('logging');
+
+        // Checks that the client is ready, if not just exit without doing anything
+        let clientEnvironment = client.checkEnvironment(logging);
+        if (!clientEnvironment) {
+            core.info("Ontrack is not configured. Not doing anything.");
+            return;
+        }
+
+        // Getting all the arguments
         let owner = core.getInput('owner');
         let repository = core.getInput('repository');
         const buildName = core.getInput('build-name');
