@@ -22,7 +22,8 @@
   "homepage": "https://github.com/nemerosa/ontrack-github-ingestion-validation-data#readme",
   "dependencies": {
     "@actions/core": "^1.7.0",
-    "@actions/github": "^5.0.1"
+    "@actions/github": "^5.0.1",
+    "yaml": "^2.0.1"
   },
   "devDependencies": {
     "@vercel/ncc": "^0.33.4",

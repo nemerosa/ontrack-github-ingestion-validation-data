@@ -2,6 +2,7 @@
 
 const core = require('@actions/core');
 const github = require('@actions/github');
+const YAML = require('yaml');
 
 try {
     // Getting all the arguments
@@ -10,6 +11,8 @@ try {
     const buildName = core.getInput('build-name');
     const buildLabel = core.getInput('build-label');
     let validation = core.getInput('validation');
+    const inputValidationData = core.getInput('validation-data');
+    const inputTestSummaryValidationData = core.getInput('test-summary-validation-data');
 
     // Setting the owner
     if (!owner) {
@@ -31,6 +34,19 @@ try {
         validation = github.context.action;
     }
 
+    // Extracting the validation data
+    let validationData = {};
+    if (inputValidationData) {
+        validationData = YAML.parse(inputValidationData);
+    } else if (inputTestSummaryValidationData) {
+        validationData = {
+            type: "net.nemerosa.ontrack.extension.general.validation.TestSummaryValidationDataType",
+            data: YAML.parse(inputTestSummaryValidationData)
+        };
+    } else {
+        throw Error('No validation data has been passed.')
+    }
+
     // Logging
     core.info(`Owner:       ${owner}`);
     core.info(`Repository:  ${repository}`);
@@ -44,6 +60,8 @@ try {
     }
     // Logging the validation information
     core.info(`Validation:  ${validation}`);
+    // Logging of the validation data
+    core.info(`Validation:\n${validationData}`);
 } catch (error) {
     core.setFailed(error.message);
 }

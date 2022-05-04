@@ -36,6 +36,45 @@ Name of the Ontrack build where to create the validation. If not set and if `bui
 
 Release property (label) of the Ontrack build where to create the validation. If not set and if `build-name` is not set either, the current workflow run ID will be used to identify the build.
 
-### `validation`
+### Validation
+
+#### `validation`
 
 Name of the validation stamp to create. Defaults to the current step name.
+
+#### Validation data
+
+One of the following options must be given.
+
+##### `validation-data`
+
+YAML object describing the validation.
+
+Two required fields:
+
+* `type` - FQCN of the validation type in Ontrack
+* `data` - JSON/YAML representation of the validation data
+
+For example, for a test summary:
+
+```yaml
+validation-data: |-
+  type: "net.nemerosa.ontrack.extension.general.validation.TestSummaryValidationDataType"
+  data:
+    passed: 15
+    skipped: 8
+    failed: 5
+```
+
+##### `test-summary-validation-data`
+
+Shortcut for some test summary validation data.
+
+For example:
+
+```yaml
+test-summary-validation-data: |-
+  passed: 15
+  skipped: 8
+  failed: 5
+```

@@ -24,6 +24,15 @@ inputs:
     description: 'Name of the validation stamp to create. Defaults to the current step name.'
     required: false
     default: ''
+  # Validation data options
+  validation-data:
+    description: 'Object describing the validation data'
+    required: false
+    default: ''
+  test-summary-validation-data:
+    description: 'Results of tests'
+    required: false
+    default: ''
 runs:
   using: 'node16'
   main: 'dist/index.js'

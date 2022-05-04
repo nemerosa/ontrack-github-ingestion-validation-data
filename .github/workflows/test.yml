@@ -20,6 +20,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Validation data test
+      - name: Raw validation data test
         uses: ./
-        # with:
+        with:
+          validation-data: |-
+            type: "net.nemerosa.ontrack.extension.general.validation.TestSummaryValidationDataType"
+            data:
+              passed: 15
+              skipped: 8
+              failed: 5
