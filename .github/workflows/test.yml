@@ -43,6 +43,7 @@ jobs:
         name: file-validation-data-test
         uses: ./
         with:
+          logging: true
           file-validation-data-type: junit
           file-validation-data-path: test/junit
 
