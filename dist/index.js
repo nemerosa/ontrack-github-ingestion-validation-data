@@ -4,8 +4,8 @@ require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 /***/ 3164:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const fetch = __nccwpck_require__(9805);
-const {ApolloClient, HttpLink, InMemoryCache} = __nccwpck_require__(7856);
+const {fetch} = __nccwpck_require__(9805);
+const {gql, ApolloClient, HttpLink, InMemoryCache} = __nccwpck_require__(7856);
 const core = __nccwpck_require__(2186);
 
 const checkEnvironment = (logging) => {
@@ -34,7 +34,7 @@ const setValidationDataByRunId = (clientEnvironment, config, logging) => {
     }
     // Client initialization
     const client = new ApolloClient({
-        link: new HttpLink({ uri: '/graphql', fetch }),
+        link: new HttpLink({uri: '/graphql', fetch}),
         uri: clientEnvironment.url,
         cache: new InMemoryCache(),
         headers: {
