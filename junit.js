@@ -8,7 +8,9 @@ async function parseJUnitFiles(path) {
     let totalSkipped = 0;
     let totalFailed = 0;
     for await (const file of globber.globGenerator()) {
+        console.log('Parsing JUnit XML file at', file);
         const summary = await parseJUnitFile(file);
+        console.log('JUnit summary: ', summary);
         totalPassed += summary.passed;
         totalSkipped += summary.skipped;
         totalFailed += summary.failed;
