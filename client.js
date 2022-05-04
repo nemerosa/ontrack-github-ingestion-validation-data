@@ -31,7 +31,10 @@ const setValidationDataByRunId = async (clientEnvironment, config, logging) => {
         link: new HttpLink({uri: `${clientEnvironment.url}/graphql`, fetch}),
         cache: new InMemoryCache(),
         headers: {
-            'X-Ontrack-Token': clientEnvironment.token
+            'X-Ontrack-Token': clientEnvironment.token,
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Credentials': true
         }
     });
     // Query to run
