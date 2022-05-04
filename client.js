@@ -70,7 +70,7 @@ const setValidationDataByRunId = (clientEnvironment, config, logging) => {
             validationData: config.validationData,
             validationStatus: null
         }
-    })
+    });
 };
 
 const setValidationData = (clientEnvironment, config, logging) => {

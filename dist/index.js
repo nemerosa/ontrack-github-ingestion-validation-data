@@ -66,7 +66,7 @@ const setValidationDataByRunId = (clientEnvironment, config, logging) => {
         }
     `;
     // Running the query
-    client.query({
+    client.mutate({
         query: query,
         variables: {
             owner: config.owner,
@@ -76,7 +76,7 @@ const setValidationDataByRunId = (clientEnvironment, config, logging) => {
             validationData: config.validationData,
             validationStatus: null
         }
-    })
+    });
 };
 
 const setValidationData = (clientEnvironment, config, logging) => {
