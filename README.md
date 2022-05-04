@@ -58,12 +58,13 @@ Two required fields:
 For example, for a test summary:
 
 ```yaml
-validation-data: |-
-  type: "net.nemerosa.ontrack.extension.general.validation.TestSummaryValidationDataType"
-  data:
-    passed: 15
-    skipped: 8
-    failed: 5
+with:
+  validation-data: |-
+    type: "net.nemerosa.ontrack.extension.general.validation.TestSummaryValidationDataType"
+    data:
+      passed: 15
+      skipped: 8
+      failed: 5
 ```
 
 ##### `test-summary-validation-data`
@@ -73,10 +74,11 @@ Shortcut for some test summary validation data.
 For example:
 
 ```yaml
-test-summary-validation-data: |-
-  passed: 15
-  skipped: 8
-  failed: 5
+with:
+  test-summary-validation-data: |-
+    passed: 15
+    skipped: 8
+    failed: 5
 ```
 
 ##### `metrics-validation-data`
@@ -86,8 +88,33 @@ Shortcut for some metrics validation data.
 For example:
 
 ```yaml
-metrics-validation-data: |-
-  position: 2.1
-  speed: 15.0
-  acceleration: 7.1
+with:
+  metrics-validation-data: |-
+    position: 2.1
+    speed: 15.0
+    acceleration: 7.1
+```
+
+##### `file-validation-data-type` and `file-validation-data-path`
+
+Indicates the path and type of a file containing the validation data.
+
+Several types are supported.
+
+###### `metrics`
+
+Example:
+
+```yaml
+with:
+  file-validation-data-type: metrics
+  file-validation-data-path: path/to/metrics.yaml
+```
+
+The file must be flat YAML file containing the metrics. For example:
+
+```yaml
+position: 2.1
+speed: 15.0
+acceleration: 7.1
 ```

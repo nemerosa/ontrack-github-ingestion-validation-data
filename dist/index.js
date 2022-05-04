@@ -17080,6 +17080,25 @@ var __webpack_exports__ = {};
 const core = __nccwpck_require__(2186);
 const github = __nccwpck_require__(5438);
 const YAML = __nccwpck_require__(4083);
+const fs = __nccwpck_require__(7147);
+
+const parseMetricsValidationData = (path) => {
+    const file = fs.readFileSync(path, 'utf8');
+    return {
+        type: "net.nemerosa.ontrack.extension.general.validation.MetricsValidationDataType",
+        data: {
+            metrics: YAML.parse(file)
+        }
+    };
+};
+
+const parseValidationData = (type, path) => {
+    if (type === 'metrics') {
+        return parseMetricsValidationData(path);
+    } else {
+        throw Error(`File validation data type not supported: ${type}`);
+    }
+};
 
 try {
     // Getting all the arguments
@@ -17091,6 +17110,8 @@ try {
     const inputValidationData = core.getInput('validation-data');
     const inputTestSummaryValidationData = core.getInput('test-summary-validation-data');
     const inputMetricsValidationData = core.getInput('metrics-validation-data');
+    const fileValidationDataType = core.getInput('file-validation-data-type');
+    const fileValidationDataPath = core.getInput('file-validation-data-path');
 
     // Setting the owner
     if (!owner) {
@@ -17128,6 +17149,8 @@ try {
                 metrics: YAML.parse(inputMetricsValidationData)
             }
         };
+    } else if (fileValidationDataType && fileValidationDataPath) {
+        validationData = parseValidationData(fileValidationDataType, fileValidationDataPath);
     } else {
         throw Error('No validation data has been passed.')
     }
@@ -17150,6 +17173,7 @@ try {
 } catch (error) {
     core.setFailed(error.message);
 }
+
 })();
 
 module.exports = __webpack_exports__;

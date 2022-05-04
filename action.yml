@@ -37,6 +37,14 @@ inputs:
     description: 'Metrics'
     required: false
     default: ''
+  file-validation-data-type:
+    description: 'Type of file containing the validation data'
+    required: false
+    default: ''
+  file-validation-data-path:
+    description: 'Path to the file containing the validation data'
+    required: false
+    default: ''
 runs:
   using: 'node16'
   main: 'dist/index.js'

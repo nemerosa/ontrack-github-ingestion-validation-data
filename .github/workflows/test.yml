@@ -53,3 +53,8 @@ jobs:
             position: 2.1
             speed: 15.0
             acceleration: 7.1
+      - id: file-validation-data-metrics
+        uses: ./
+        with:
+          file-validation-data-type: metrics
+          file-validation-data-path: test/metrics.yaml
