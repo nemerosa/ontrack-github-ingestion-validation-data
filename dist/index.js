@@ -21571,6 +21571,8 @@ async function run() {
         if (!clientEnvironment) {
             core.info("Ontrack is not configured. Not doing anything.");
             return;
+        } else if (logging) {
+            core.info(`Ontrack URL: ${clientEnvironment.url}`)
         }
 
         // Getting all the arguments
