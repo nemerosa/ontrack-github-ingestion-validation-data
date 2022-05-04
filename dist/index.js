@@ -34,8 +34,7 @@ const setValidationDataByRunId = (clientEnvironment, config, logging) => {
     }
     // Client initialization
     const client = new ApolloClient({
-        link: new HttpLink({uri: '/graphql', fetch}),
-        uri: clientEnvironment.url,
+        link: new HttpLink({uri: `${clientEnvironment.url}/graphql`, fetch}),
         cache: new InMemoryCache(),
         headers: {
             'X-Ontrack-Token': clientEnvironment.token
