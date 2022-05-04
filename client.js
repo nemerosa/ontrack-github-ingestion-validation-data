@@ -20,8 +20,25 @@ const checkEnvironment = (logging) => {
     };
 };
 
+const setValidationDataByRunId = (clientEnvironment, config, logging) => {
+    if (logging) {
+        core.info(`Calling ${clientEnvironment.url} 'by run id' with ${JSON.stringify(config)}`);
+    }
+};
+
+const setValidationData = (clientEnvironment, config, logging) => {
+    if (config.buildLabel) {
+        throw Error("Build label not implemented yet");
+    } else if (config.buildName) {
+        throw Error("Build name not implemented yet");
+    } else {
+        setValidationDataByRunId(clientEnvironment, config, logging)
+    }
+};
+
 const client = {
-    checkEnvironment: checkEnvironment
+    checkEnvironment: checkEnvironment,
+    setValidationData: setValidationData
 }
 
 module.exports = client;

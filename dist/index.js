@@ -26,8 +26,25 @@ const checkEnvironment = (logging) => {
     };
 };
 
+const setValidationDataByRunId = (clientEnvironment, config, logging) => {
+    if (logging) {
+        core.info(`Calling ${clientEnvironment.url} 'by run id' with ${JSON.stringify(config)}`);
+    }
+};
+
+const setValidationData = (clientEnvironment, config, logging) => {
+    if (config.buildLabel) {
+        throw Error("Build label not implemented yet");
+    } else if (config.buildName) {
+        throw Error("Build name not implemented yet");
+    } else {
+        setValidationDataByRunId(clientEnvironment, config, logging)
+    }
+};
+
 const client = {
-    checkEnvironment: checkEnvironment
+    checkEnvironment: checkEnvironment,
+    setValidationData: setValidationData
 }
 
 module.exports = client;
@@ -21629,21 +21646,21 @@ async function run() {
             throw Error('No validation data has been passed.')
         }
 
-        // Logging
-        core.info(`Owner:       ${owner}`);
-        core.info(`Repository:  ${repository}`);
-        // Logging of the build identification
-        if (buildLabel) {
-            core.info(`Build label: ${buildLabel}`);
-        } else if (buildName) {
-            core.info(`Build name:  ${buildName}`);
-        } else {
-            core.info(`Run ID:      ${github.context.runId}`);
-        }
-        // Logging the validation information
-        core.info(`Validation:  ${validation}`);
-        // Logging of the validation data
-        core.info(`Validation:\n${JSON.stringify(validationData)}`);
+        // Calling Ontrack to set the validation
+        client.setValidationData(
+            clientEnvironment,
+            {
+                owner,
+                repository,
+                runId: github.context.runId,
+                buildName,
+                buildLabel,
+                validation,
+                validationData
+            },
+            logging
+        );
+
     } catch (error) {
         core.setFailed(error.message);
     }
