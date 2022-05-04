@@ -12,7 +12,6 @@ async function parseJUnitFile(path) {
         ignoreAttributes: false
     });
     const xml = parser.parse(fs.readFileSync(path));
-    console.log("suite", xml);
     const suite = xml.testsuite;
     const tests = Number(suite["@_tests"]);
     const skipped = Number(suite["@_skipped"]);
