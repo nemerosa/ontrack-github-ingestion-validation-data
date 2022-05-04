@@ -61,7 +61,7 @@ try {
     // Logging the validation information
     core.info(`Validation:  ${validation}`);
     // Logging of the validation data
-    core.info(`Validation:\n${validationData}`);
+    core.info(`Validation:\n${YAML.stringify(validationData)}`);
 } catch (error) {
     core.setFailed(error.message);
 }
