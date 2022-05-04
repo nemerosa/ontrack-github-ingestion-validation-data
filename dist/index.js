@@ -67,7 +67,7 @@ const setValidationDataByRunId = (clientEnvironment, config, logging) => {
     `;
     // Running the query
     client.mutate({
-        query: query,
+        mutation: query,
         variables: {
             owner: config.owner,
             repository: config.repository,
