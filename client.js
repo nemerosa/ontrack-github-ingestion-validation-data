@@ -1,5 +1,4 @@
 const {fetch} = require('cross-fetch');
-const {gql, ApolloClient, HttpLink, InMemoryCache} = require("@apollo/client");
 const core = require('@actions/core');
 
 const checkEnvironment = (logging) => {
@@ -22,23 +21,34 @@ const checkEnvironment = (logging) => {
     };
 };
 
+const graphQL = async (clientEnvironment, query, variables, logging) => {
+    if (logging) {
+        console.log("Query: ", query);
+        console.log("Variables: ", variables);
+    }
+    const result = await fetch(`${clientEnvironment.url}/graphql`, {
+        method: "POST",
+        headers: {
+            'X-Ontrack-Token': clientEnvironment.token
+        },
+        body: JSON.stringify({
+            query: query,
+            variables: variables
+        })
+    });
+    if (result.status >= 200 && result.status < 300) {
+        return result.json();
+    } else {
+        throw Error(`HTTP ${result.status}`);
+    }
+};
+
 const setValidationDataByRunId = async (clientEnvironment, config, logging) => {
     if (logging) {
-        core.info(`Calling ${clientEnvironment.url} 'by run id' with ${JSON.stringify(config)}`);
+        core.info(`Setting validation by run id with ${JSON.stringify(config)}`);
     }
-    // Client initialization
-    const client = new ApolloClient({
-        link: new HttpLink({uri: `${clientEnvironment.url}/graphql`, fetch}),
-        cache: new InMemoryCache(),
-        headers: {
-            'X-Ontrack-Token': clientEnvironment.token,
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Credentials': true
-        }
-    });
-    // Query to run
-    const query = gql`
+    // GraphQL query
+    const query = `
         mutation SetValidationDataByRunId(
             $owner: String!,
             $repository: String!,
@@ -61,30 +71,36 @@ const setValidationDataByRunId = async (clientEnvironment, config, logging) => {
             }
         }
     `;
-    // Running the query
-    const result = await client.mutate({
-        mutation: query,
-        variables: {
-            owner: config.owner,
-            repository: config.repository,
-            runId: config.runId,
-            validation: config.validation,
-            validationData: config.validationData,
-            validationStatus: null
-        }
-    });
+    // Variables
+    const variables = {
+        owner: config.owner,
+        repository: config.repository,
+        runId: config.runId,
+        validation: config.validation,
+        validationData: config.validationData,
+        validationStatus: null
+    };
+    // GraphQL call
+    const result = await graphQL(
+        clientEnvironment,
+        query,
+        variables,
+        logging
+    )
     if (logging) {
         console.log('Result: ', result);
     }
+    // OK
+    return result;
 };
 
-const setValidationData = (clientEnvironment, config, logging) => {
+const setValidationData = async (clientEnvironment, config, logging) => {
     if (config.buildLabel) {
         throw Error("Build label not implemented yet");
     } else if (config.buildName) {
         throw Error("Build name not implemented yet");
     } else {
-        setValidationDataByRunId(clientEnvironment, config, logging)
+        await setValidationDataByRunId(clientEnvironment, config, logging);
     }
 };
 
