@@ -25,6 +25,7 @@ const parseJUnitValidationData = async (path) => {
     const parser = new XMLParser();
     for await (const file of globber.globGenerator()) {
         const xml = parser.parse(file);
+        console.log("suite", xml);
         const suite = xml.testsuite;
         const tests = suite["@tests"];
         const skipped = suite["@skipped"];
