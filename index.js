@@ -5,6 +5,7 @@ const github = require('@actions/github');
 const YAML = require('yaml');
 const fs = require('fs');
 const junit = require('./junit');
+const client = require('./client');
 
 const parseMetricsValidationData = (path) => {
     const file = fs.readFileSync(path, 'utf8');
@@ -28,8 +29,16 @@ const parseValidationData = async (type, path, logging) => {
 
 async function run() {
     try {
-        // Getting all the arguments
         const logging = core.getBooleanInput('logging');
+
+        // Checks that the client is ready, if not just exit without doing anything
+        let clientEnvironment = client.checkEnvironment(logging);
+        if (!clientEnvironment) {
+            core.info("Ontrack is not configured. Not doing anything.");
+            return;
+        }
+
+        // Getting all the arguments
         let owner = core.getInput('owner');
         let repository = core.getInput('repository');
         const buildName = core.getInput('build-name');
