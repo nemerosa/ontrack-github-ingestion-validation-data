@@ -8,26 +8,30 @@ const glob = __nccwpck_require__(8090);
 const {XMLParser} = __nccwpck_require__(2603);
 const fs = __nccwpck_require__(7147);
 
-async function parseJUnitFiles(path) {
+async function parseJUnitFiles(path, logging) {
     const globber = await glob.create(`${path}/*.xml`);
     let totalPassed = 0;
     let totalSkipped = 0;
     let totalFailed = 0;
     for await (const file of globber.globGenerator()) {
-        console.log('Parsing JUnit XML file at', file);
+        if (logging) console.log('Parsing JUnit XML file at', file);
         const summary = await parseJUnitFile(file);
-        console.log('JUnit summary: ', summary);
+        if (logging) console.log('JUnit summary: ', summary);
         totalPassed += summary.passed;
         totalSkipped += summary.skipped;
         totalFailed += summary.failed;
     }
+    const data = {
+        passed: totalPassed,
+        skipped: totalSkipped,
+        failed: totalFailed
+    };
+    if (logging) {
+        console.log('JUnit data: ', data);
+    }
     return {
         type: "net.nemerosa.ontrack.extension.general.validation.TestSummaryValidationDataType",
-        data: {
-            passed: totalPassed,
-            skipped: totalSkipped,
-            failed: totalFailed
-        }
+        data: data
     };
 }
 
@@ -21514,11 +21518,11 @@ const parseMetricsValidationData = (path) => {
     };
 };
 
-const parseValidationData = (type, path) => {
+const parseValidationData = (type, path, logging) => {
     if (type === 'metrics') {
         return parseMetricsValidationData(path);
     } else if (type === 'junit') {
-        return junit.parseJUnitFiles(path);
+        return junit.parseJUnitFiles(path, logging);
     } else {
         throw Error(`File validation data type not supported: ${type}`);
     }
@@ -21526,6 +21530,7 @@ const parseValidationData = (type, path) => {
 
 try {
     // Getting all the arguments
+    const logging = core.getBooleanInput('logging');
     let owner = core.getInput('owner');
     let repository = core.getInput('repository');
     const buildName = core.getInput('build-name');
@@ -21574,7 +21579,7 @@ try {
             }
         };
     } else if (fileValidationDataType && fileValidationDataPath) {
-        validationData = parseValidationData(fileValidationDataType, fileValidationDataPath);
+        validationData = parseValidationData(fileValidationDataType, fileValidationDataPath, logging);
     } else {
         throw Error('No validation data has been passed.')
     }

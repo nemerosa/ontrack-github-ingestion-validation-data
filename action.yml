@@ -1,6 +1,11 @@
 name: "ontrack-github-ingestion-validation-data"
 description: "GitHub Action used to inject data into validations in Ontrack."
 inputs:
+  # Misc
+  logging:
+    description: 'If set to true, logs additional information on the console'
+    required: false
+    default: 'false'
   # Target project
   owner:
     description: 'Name of the repository owner to target'

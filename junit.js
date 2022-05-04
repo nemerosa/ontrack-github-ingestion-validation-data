@@ -2,26 +2,30 @@ const glob = require('@actions/glob');
 const {XMLParser} = require("fast-xml-parser");
 const fs = require('fs');
 
-async function parseJUnitFiles(path) {
+async function parseJUnitFiles(path, logging) {
     const globber = await glob.create(`${path}/*.xml`);
     let totalPassed = 0;
     let totalSkipped = 0;
     let totalFailed = 0;
     for await (const file of globber.globGenerator()) {
-        console.log('Parsing JUnit XML file at', file);
+        if (logging) console.log('Parsing JUnit XML file at', file);
         const summary = await parseJUnitFile(file);
-        console.log('JUnit summary: ', summary);
+        if (logging) console.log('JUnit summary: ', summary);
         totalPassed += summary.passed;
         totalSkipped += summary.skipped;
         totalFailed += summary.failed;
     }
+    const data = {
+        passed: totalPassed,
+        skipped: totalSkipped,
+        failed: totalFailed
+    };
+    if (logging) {
+        console.log('JUnit data: ', data);
+    }
     return {
         type: "net.nemerosa.ontrack.extension.general.validation.TestSummaryValidationDataType",
-        data: {
-            passed: totalPassed,
-            skipped: totalSkipped,
-            failed: totalFailed
-        }
+        data: data
     };
 }
 

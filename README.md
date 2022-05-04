@@ -141,3 +141,9 @@ The path must be a directory containing XML JUnit report. For example:
 ```
 
 > Only the `tests`, `skipped`, `failures` and `errors` attributes of the `testsuite` root are used. The rest of the attributes and elements is ignored.
+
+### Misc
+
+#### `logging`
+
+If set to `true`, logs additional information on the console.

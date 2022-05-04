@@ -16,11 +16,11 @@ const parseMetricsValidationData = (path) => {
     };
 };
 
-const parseValidationData = (type, path) => {
+const parseValidationData = (type, path, logging) => {
     if (type === 'metrics') {
         return parseMetricsValidationData(path);
     } else if (type === 'junit') {
-        return junit.parseJUnitFiles(path);
+        return junit.parseJUnitFiles(path, logging);
     } else {
         throw Error(`File validation data type not supported: ${type}`);
     }
@@ -28,6 +28,7 @@ const parseValidationData = (type, path) => {
 
 try {
     // Getting all the arguments
+    const logging = core.getBooleanInput('logging');
     let owner = core.getInput('owner');
     let repository = core.getInput('repository');
     const buildName = core.getInput('build-name');
@@ -76,7 +77,7 @@ try {
             }
         };
     } else if (fileValidationDataType && fileValidationDataPath) {
-        validationData = parseValidationData(fileValidationDataType, fileValidationDataPath);
+        validationData = parseValidationData(fileValidationDataType, fileValidationDataPath, logging);
     } else {
         throw Error('No validation data has been passed.')
     }
