@@ -21,6 +21,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - id: raw-validation-data-test
+        name: raw-validation-data-test
         uses: ./
         with:
           validation-data: |-
@@ -30,6 +31,7 @@ jobs:
               skipped: 8
               failed: 5
       - id: specific-validation-data-test
+        name: specific-validation-data-test
         uses: ./
         with:
           test-summary-validation-data: |-
@@ -37,12 +39,14 @@ jobs:
             skipped: 8
             failed: 5
       - id: file-validation-data-test
+        name: file-validation-data-test
         uses: ./
         with:
           file-validation-data-type: junit
           file-validation-data-path: test/junit
 
       - id: raw-validation-data-metrics
+        name: raw-validation-data-metrics
         uses: ./
         with:
           validation-data: |-
@@ -53,6 +57,7 @@ jobs:
                 speed: 15.0
                 acceleration: 7.1
       - id: specific-validation-data-metrics
+        name: specific-validation-data-metrics
         uses: ./
         with:
           metrics-validation-data: |-
@@ -60,6 +65,7 @@ jobs:
             speed: 15.0
             acceleration: 7.1
       - id: file-validation-data-metrics
+        name: file-validation-data-metrics
         uses: ./
         with:
           file-validation-data-type: metrics
