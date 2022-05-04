@@ -19,6 +19,9 @@ jobs:
   # test action works running from the graph
   test:
     runs-on: ubuntu-latest
+    env:
+      ONTRACK_URL: "${{ secrets.ONTRACK_URL }}"
+      ONTRACK_TOKEN: "${{ secrets.ONTRACK_TOKEN }}"
     steps:
       - uses: actions/checkout@v3
       - id: raw-validation-data-test
