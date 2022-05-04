@@ -78,3 +78,16 @@ test-summary-validation-data: |-
   skipped: 8
   failed: 5
 ```
+
+##### `metrics-validation-data`
+
+Shortcut for some metrics validation data.
+
+For example:
+
+```yaml
+metrics-validation-data: |-
+  position: 2.1
+  speed: 15.0
+  acceleration: 7.1
+```

@@ -17090,6 +17090,7 @@ try {
     let validation = core.getInput('validation');
     const inputValidationData = core.getInput('validation-data');
     const inputTestSummaryValidationData = core.getInput('test-summary-validation-data');
+    const inputMetricsValidationData = core.getInput('metrics-validation-data');
 
     // Setting the owner
     if (!owner) {
@@ -17119,6 +17120,13 @@ try {
         validationData = {
             type: "net.nemerosa.ontrack.extension.general.validation.TestSummaryValidationDataType",
             data: YAML.parse(inputTestSummaryValidationData)
+        };
+    } else if (inputMetricsValidationData) {
+        validationData = {
+            type: "net.nemerosa.ontrack.extension.general.validation.MetricsValidationDataType",
+            data: {
+                metrics: YAML.parse(inputMetricsValidationData)
+            }
         };
     } else {
         throw Error('No validation data has been passed.')

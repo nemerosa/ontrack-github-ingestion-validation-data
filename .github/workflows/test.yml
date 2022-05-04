@@ -36,3 +36,20 @@ jobs:
             passed: 15
             skipped: 8
             failed: 5
+      - id: raw-validation-data-metrics
+        uses: ./
+        with:
+          validation-data: |-
+            type: "net.nemerosa.ontrack.extension.general.validation.MetricsValidationDataType"
+            data:
+              metrics:
+                position: 2.1
+                speed: 15.0
+                acceleration: 7.1
+      - id: specific-validation-data-metrics
+        uses: ./
+        with:
+          metrics-validation-data: |-
+            position: 2.1
+            speed: 15.0
+            acceleration: 7.1

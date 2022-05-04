@@ -33,6 +33,10 @@ inputs:
     description: 'Results of tests'
     required: false
     default: ''
+  metrics-validation-data:
+    description: 'Metrics'
+    required: false
+    default: ''
 runs:
   using: 'node16'
   main: 'dist/index.js'
