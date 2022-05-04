@@ -24,10 +24,12 @@ jobs:
       ONTRACK_TOKEN: "${{ secrets.ONTRACK_TOKEN }}"
     steps:
       - uses: actions/checkout@v3
+
       - id: raw-validation-data-test
         name: raw-validation-data-test
         uses: ./
         with:
+          logging: true
           validation-data: |-
             type: "net.nemerosa.ontrack.extension.general.validation.TestSummaryValidationDataType"
             data:

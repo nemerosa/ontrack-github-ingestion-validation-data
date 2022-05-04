@@ -95,7 +95,7 @@ async function run() {
         }
 
         // Calling Ontrack to set the validation
-        client.setValidationData(
+        await client.setValidationData(
             clientEnvironment,
             {
                 owner,

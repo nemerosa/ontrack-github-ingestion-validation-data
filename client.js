@@ -22,7 +22,7 @@ const checkEnvironment = (logging) => {
     };
 };
 
-const setValidationDataByRunId = (clientEnvironment, config, logging) => {
+const setValidationDataByRunId = async (clientEnvironment, config, logging) => {
     if (logging) {
         core.info(`Calling ${clientEnvironment.url} 'by run id' with ${JSON.stringify(config)}`);
     }
@@ -59,7 +59,7 @@ const setValidationDataByRunId = (clientEnvironment, config, logging) => {
         }
     `;
     // Running the query
-    client.mutate({
+    const result = await client.mutate({
         mutation: query,
         variables: {
             owner: config.owner,
@@ -70,6 +70,9 @@ const setValidationDataByRunId = (clientEnvironment, config, logging) => {
             validationStatus: null
         }
     });
+    if (logging) {
+        console.log('Result: ', result);
+    }
 };
 
 const setValidationData = (clientEnvironment, config, logging) => {
