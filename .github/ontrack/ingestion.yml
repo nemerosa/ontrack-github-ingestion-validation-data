@@ -1,2 +1,2 @@
 workflows:
-  excludes: "Check dist/"
+  excludes: "Check dist"
