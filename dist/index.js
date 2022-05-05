@@ -37,6 +37,7 @@ const graphQL = async (clientEnvironment, query, variables, logging) => {
         headers: {
             'X-Ontrack-Token': clientEnvironment.token
         },
+        credentials: "omit",
         body: JSON.stringify({
             query: query,
             variables: variables
@@ -84,7 +85,7 @@ const setValidationDataByRunId = async (clientEnvironment, config, logging) => {
         runId: config.runId,
         validation: config.validation,
         validationData: config.validationData,
-        validationStatus: null
+        validationStatus: config.validationStatus,
     };
     // GraphQL call
     const result = await graphQL(
@@ -176,6 +177,32 @@ async function parseJUnitFile(path) {
 module.exports = {
     parseJUnitFiles: parseJUnitFiles,
     parseJUnitFile: parseJUnitFile
+};
+
+
+/***/ }),
+
+/***/ 9610:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+const YAML = __nccwpck_require__(4083);
+
+const parseYAMLMetrics = (yaml) => {
+    const entries = YAML.parse(yaml);
+    const data = {
+        metrics: []
+    };
+    for (const [key, value] of Object.entries(entries)) {
+        data.metrics.push({
+            name: key,
+            value: value
+        });
+    }
+    return data;
+};
+
+module.exports = {
+    parseYAMLMetrics: parseYAMLMetrics,
 };
 
 
@@ -21654,15 +21681,14 @@ const github = __nccwpck_require__(5438);
 const YAML = __nccwpck_require__(4083);
 const fs = __nccwpck_require__(7147);
 const junit = __nccwpck_require__(8138);
+const metrics = __nccwpck_require__(9610);
 const client = __nccwpck_require__(3164);
 
 const parseMetricsValidationData = (path) => {
     const file = fs.readFileSync(path, 'utf8');
     return {
         type: "net.nemerosa.ontrack.extension.general.validation.MetricsValidationDataType",
-        data: {
-            metrics: YAML.parse(file)
-        }
+        data: metrics.parseYAMLMetrics(file)
     };
 };
 
@@ -21695,6 +21721,7 @@ async function run() {
         const buildName = core.getInput('build-name');
         const buildLabel = core.getInput('build-label');
         let validation = core.getInput('validation');
+        let validationStatus = core.getInput('validation-status');
         const inputValidationData = core.getInput('validation-data');
         const inputTestSummaryValidationData = core.getInput('test-summary-validation-data');
         const inputMetricsValidationData = core.getInput('metrics-validation-data');
@@ -21721,6 +21748,11 @@ async function run() {
             validation = github.context.action;
         }
 
+        // Validation status
+        if (!validationStatus) {
+            validationStatus = null;
+        }
+
         // Extracting the validation data
         let validationData = {};
         if (inputValidationData) {
@@ -21733,9 +21765,7 @@ async function run() {
         } else if (inputMetricsValidationData) {
             validationData = {
                 type: "net.nemerosa.ontrack.extension.general.validation.MetricsValidationDataType",
-                data: {
-                    metrics: YAML.parse(inputMetricsValidationData)
-                }
+                data: metrics.parseYAMLMetrics(inputMetricsValidationData)
             };
         } else if (fileValidationDataType && fileValidationDataPath) {
             validationData = await parseValidationData(fileValidationDataType, fileValidationDataPath, logging);
@@ -21753,7 +21783,8 @@ async function run() {
                 buildName,
                 buildLabel,
                 validation,
-                validationData
+                validationData,
+                validationStatus,
             },
             logging
         );

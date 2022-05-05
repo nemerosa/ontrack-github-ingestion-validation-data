@@ -60,9 +60,12 @@ jobs:
             type: "net.nemerosa.ontrack.extension.general.validation.MetricsValidationDataType"
             data:
               metrics:
-                position: 2.1
-                speed: 15.0
-                acceleration: 7.1
+                - name: position
+                  value: 2.1
+                - name: speed
+                  value: 15.0
+                - name: acceleration
+                  value: 7.1
       - id: specific-validation-data-metrics
         name: specific-validation-data-metrics
         uses: ./

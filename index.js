@@ -5,15 +5,14 @@ const github = require('@actions/github');
 const YAML = require('yaml');
 const fs = require('fs');
 const junit = require('./junit');
+const metrics = require('./metrics');
 const client = require('./client');
 
 const parseMetricsValidationData = (path) => {
     const file = fs.readFileSync(path, 'utf8');
     return {
         type: "net.nemerosa.ontrack.extension.general.validation.MetricsValidationDataType",
-        data: {
-            metrics: YAML.parse(file)
-        }
+        data: metrics.parseYAMLMetrics(file)
     };
 };
 
@@ -90,9 +89,7 @@ async function run() {
         } else if (inputMetricsValidationData) {
             validationData = {
                 type: "net.nemerosa.ontrack.extension.general.validation.MetricsValidationDataType",
-                data: {
-                    metrics: YAML.parse(inputMetricsValidationData)
-                }
+                data: metrics.parseYAMLMetrics(inputMetricsValidationData)
             };
         } else if (fileValidationDataType && fileValidationDataPath) {
             validationData = await parseValidationData(fileValidationDataType, fileValidationDataPath, logging);

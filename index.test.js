@@ -1,4 +1,17 @@
 const junit = require('./junit');
+const metrics = require('./metrics');
+
+test('parsing of YAML metrics data', async () => {
+    const yaml = `position: 2.1
+speed: 15.0
+acceleration: 7.1`;
+    const data = metrics.parseYAMLMetrics(yaml);
+    expect(data.metrics).toStrictEqual([
+        {name: 'position', value: 2.1},
+        {name: 'speed', value: 15},
+        {name: 'acceleration', value: 7.1}
+    ]);
+});
 
 test('parsing of one JUnit report', async () => {
     const path = 'test/junit/TEST-net.nemerosa.ontrack.common.VersionTest.xml';
