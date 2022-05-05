@@ -30,25 +30,30 @@ jobs:
         uses: ./
         with:
           logging: true
+          validation-status: PASSED
           validation-data: |-
             type: "net.nemerosa.ontrack.extension.general.validation.TestSummaryValidationDataType"
             data:
               passed: 15
               skipped: 8
               failed: 5
+
       - id: specific-validation-data-test
         name: specific-validation-data-test
         uses: ./
         with:
+          validation-status: PASSED
           test-summary-validation-data: |-
             passed: 15
             skipped: 8
             failed: 5
+
       - id: file-validation-data-test
         name: file-validation-data-test
         uses: ./
         with:
           logging: true
+          validation-status: PASSED
           file-validation-data-type: junit
           file-validation-data-path: test/junit
 
@@ -56,6 +61,7 @@ jobs:
         name: raw-validation-data-metrics
         uses: ./
         with:
+          validation-status: PASSED
           validation-data: |-
             type: "net.nemerosa.ontrack.extension.general.validation.MetricsValidationDataType"
             data:
@@ -66,17 +72,21 @@ jobs:
                   value: 15.0
                 - name: acceleration
                   value: 7.1
+
       - id: specific-validation-data-metrics
         name: specific-validation-data-metrics
         uses: ./
         with:
+          validation-status: PASSED
           metrics-validation-data: |-
             position: 2.1
             speed: 15.0
             acceleration: 7.1
+
       - id: file-validation-data-metrics
         name: file-validation-data-metrics
         uses: ./
         with:
+          validation-status: PASSED
           file-validation-data-type: metrics
           file-validation-data-path: test/metrics.yaml
