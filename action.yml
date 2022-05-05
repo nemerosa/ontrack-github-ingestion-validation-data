@@ -29,6 +29,10 @@ inputs:
     description: 'Name of the validation stamp to create. Defaults to the current step name.'
     required: false
     default: ''
+  validation-status:
+    description: 'One of `PASSED`, `FAILED`, `WARNING`, etc. Required if the target validation stamp has not been configured for data validation.'
+    required: false
+    default: ''
   # Validation data options
   validation-data:
     description: 'Object describing the validation data'

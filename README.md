@@ -42,6 +42,10 @@ Release property (label) of the Ontrack build where to create the validation. If
 
 Name of the validation stamp to create. Defaults to the current step name.
 
+#### `validation-status`
+
+One of `PASSED`, `FAILED`, `WARNING`, etc. Required if the target validation stamp has not been configured for data validation.
+
 #### Validation data
 
 One of the following options must be given.

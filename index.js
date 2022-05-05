@@ -46,6 +46,7 @@ async function run() {
         const buildName = core.getInput('build-name');
         const buildLabel = core.getInput('build-label');
         let validation = core.getInput('validation');
+        let validationStatus = core.getInput('validation-status');
         const inputValidationData = core.getInput('validation-data');
         const inputTestSummaryValidationData = core.getInput('test-summary-validation-data');
         const inputMetricsValidationData = core.getInput('metrics-validation-data');
@@ -70,6 +71,11 @@ async function run() {
         // Validation name
         if (!validation) {
             validation = github.context.action;
+        }
+
+        // Validation status
+        if (!validationStatus) {
+            validationStatus = null;
         }
 
         // Extracting the validation data
@@ -104,7 +110,8 @@ async function run() {
                 buildName,
                 buildLabel,
                 validation,
-                validationData
+                validationData,
+                validationStatus,
             },
             logging
         );

@@ -79,7 +79,7 @@ const setValidationDataByRunId = async (clientEnvironment, config, logging) => {
         runId: config.runId,
         validation: config.validation,
         validationData: config.validationData,
-        validationStatus: null
+        validationStatus: config.validationStatus,
     };
     // GraphQL call
     const result = await graphQL(
