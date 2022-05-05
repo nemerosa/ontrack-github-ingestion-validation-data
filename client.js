@@ -31,6 +31,7 @@ const graphQL = async (clientEnvironment, query, variables, logging) => {
         headers: {
             'X-Ontrack-Token': clientEnvironment.token
         },
+        credentials: "omit",
         body: JSON.stringify({
             query: query,
             variables: variables
