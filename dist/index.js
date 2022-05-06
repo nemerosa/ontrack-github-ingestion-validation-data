@@ -101,11 +101,62 @@ const setValidationDataByRunId = async (clientEnvironment, config, logging) => {
     return result;
 };
 
+const setValidationDataByBuildName = async (clientEnvironment, config, logging) => {
+    if (logging) {
+        core.info(`Setting validation by build name with ${JSON.stringify(config)}`);
+    }
+    // GraphQL query
+    const query = `
+        mutation SetValidationDataByBuildName(
+            $owner: String!,
+            $repository: String!,
+            $buildName: String!,
+            $validation: String!,
+            $validationData: GitHubIngestionValidationDataInput!,
+            $validationStatus: String
+        ) {
+            gitHubIngestionValidateDataByBuildName(input: {
+                owner: $owner,
+                repository: $repository,
+                buildName: $buildName,
+                validation: $validation,
+                validationData: $validationData,
+                validationStatus: $validationStatus
+            }) {
+                errors {
+                    message
+                }
+            }
+        }
+    `;
+    // Variables
+    const variables = {
+        owner: config.owner,
+        repository: config.repository,
+        buildName: config.buildName,
+        validation: config.validation,
+        validationData: config.validationData,
+        validationStatus: config.validationStatus,
+    };
+    // GraphQL call
+    const result = await graphQL(
+        clientEnvironment,
+        query,
+        variables,
+        logging
+    )
+    if (logging) {
+        console.log('Result: ', result);
+    }
+    // OK
+    return result;
+};
+
 const setValidationData = async (clientEnvironment, config, logging) => {
     if (config.buildLabel) {
         throw Error("Build label not implemented yet");
     } else if (config.buildName) {
-        throw Error("Build name not implemented yet");
+        await setValidationDataByBuildName(clientEnvironment, config, logging);
     } else {
         await setValidationDataByRunId(clientEnvironment, config, logging);
     }

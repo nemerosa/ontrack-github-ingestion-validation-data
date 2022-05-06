@@ -38,6 +38,20 @@ jobs:
               skipped: 8
               failed: 5
 
+      - id: raw-validation-data-test-by-name
+        name: raw-validation-data-test-by-name
+        uses: ./
+        with:
+          logging: true
+          build-name: "units-tests-${{ github.run_number }}"
+          validation-status: PASSED
+          validation-data: |-
+            type: "net.nemerosa.ontrack.extension.general.validation.TestSummaryValidationDataType"
+            data:
+              passed: 15
+              skipped: 8
+              failed: 5
+
       - id: specific-validation-data-test
         name: specific-validation-data-test
         uses: ./
