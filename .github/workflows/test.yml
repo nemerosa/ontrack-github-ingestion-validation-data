@@ -56,6 +56,18 @@ jobs:
             skipped: 8
             failed: 5
 
+      - id: raw-validation-data-test-by-label
+        name: raw-validation-data-test-by-label
+        uses: ./
+        with:
+          logging: true
+          build-name: "main-test-${{ github.run_number }}"
+          validation-status: PASSED
+          test-summary-validation-data: |-
+            passed: 23
+            skipped: 15
+            failed: 8
+
       - id: specific-validation-data-test
         name: specific-validation-data-test
         uses: ./
