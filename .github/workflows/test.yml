@@ -45,12 +45,10 @@ jobs:
           logging: true
           build-name: "units-tests-${{ github.run_number }}"
           validation-status: PASSED
-          validation-data: |-
-            type: "net.nemerosa.ontrack.extension.general.validation.TestSummaryValidationDataType"
-            data:
-              passed: 15
-              skipped: 8
-              failed: 5
+          test-summary-validation-data: |-
+            passed: 15
+            skipped: 8
+            failed: 5
 
       - id: specific-validation-data-test
         name: specific-validation-data-test
