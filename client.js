@@ -146,9 +146,60 @@ const setValidationDataByBuildName = async (clientEnvironment, config, logging) 
     return result;
 };
 
+const setValidationDataByBuildLabel = async (clientEnvironment, config, logging) => {
+    if (logging) {
+        core.info(`Setting validation by build label with ${JSON.stringify(config)}`);
+    }
+    // GraphQL query
+    const query = `
+        mutation SetValidationDataByBuildLabel(
+            $owner: String!,
+            $repository: String!,
+            $buildLabel: String!,
+            $validation: String!,
+            $validationData: GitHubIngestionValidationDataInput!,
+            $validationStatus: String
+        ) {
+            gitHubIngestionValidateDataByBuildLabel(input: {
+                owner: $owner,
+                repository: $repository,
+                buildLabel: $buildLabel,
+                validation: $validation,
+                validationData: $validationData,
+                validationStatus: $validationStatus
+            }) {
+                errors {
+                    message
+                }
+            }
+        }
+    `;
+    // Variables
+    const variables = {
+        owner: config.owner,
+        repository: config.repository,
+        buildLabel: config.buildLabel,
+        validation: config.validation,
+        validationData: config.validationData,
+        validationStatus: config.validationStatus,
+    };
+    // GraphQL call
+    const result = await graphQL(
+        clientEnvironment,
+        query,
+        variables,
+        logging
+    )
+    if (logging) {
+        console.log('Result: ', result);
+    }
+    // OK
+    return result;
+};
+
 const setValidationData = async (clientEnvironment, config, logging) => {
     if (config.buildLabel) {
-        throw Error("Build label not implemented yet");
+        await setValidationDataByBuildLabel(clientEnvironment, config, logging);
     } else if (config.buildName) {
         await setValidationDataByBuildName(clientEnvironment, config, logging);
     } else {
