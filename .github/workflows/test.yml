@@ -61,7 +61,7 @@ jobs:
         uses: ./
         with:
           logging: true
-          build-name: "main-test-${{ github.run_number }}"
+          build-label: "main-test-${{ github.run_number }}"
           validation-status: PASSED
           test-summary-validation-data: |-
             passed: 23
