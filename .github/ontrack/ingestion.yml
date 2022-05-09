@@ -2,6 +2,6 @@ general:
   validationJobPrefix: false
 workflows:
   filter:
-    excludes: "check-dist"
+    excludes: "Check dist"
 runs:
   enabled: true
