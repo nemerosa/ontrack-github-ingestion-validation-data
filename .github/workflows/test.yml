@@ -25,6 +25,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - id: tagging
+        if: github.ref == 'refs/heads/main'
+        run: |
+          git tag main-test-${{ github.run_number }}
+          git push origin main-test-${{ github.run_number }}
+
       - id: raw-validation-data-test
         name: raw-validation-data-test
         uses: ./
