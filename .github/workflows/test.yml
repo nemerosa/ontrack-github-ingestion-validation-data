@@ -43,7 +43,7 @@ jobs:
         uses: ./
         with:
           logging: true
-          build-name: "units-tests-${{ github.run_number }}"
+          build-name: "units-test-${{ github.run_number }}"
           validation-status: PASSED
           test-summary-validation-data: |-
             passed: 15
