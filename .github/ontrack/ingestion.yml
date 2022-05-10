@@ -5,3 +5,21 @@ workflows:
     excludes: "Check dist"
 runs:
   enabled: true
+validations:
+  - name: typed-unit-tests
+    dataType:
+      type: test-summary
+      config:
+        warningIfSkipped: true
+  - name: typed-metrics
+    dataType:
+      type: metrics
+promotions:
+  - name: IRON
+    validations:
+      - typed-unit-tests
+  - name: SILVER
+    validations:
+      - typed-metrics
+    promotions:
+      - IRON
