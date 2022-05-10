@@ -120,3 +120,20 @@ jobs:
           validation-status: PASSED
           file-validation-data-type: metrics
           file-validation-data-path: test/metrics.yaml
+
+      - id: filling-typed-unit-tests
+        uses: ./
+        with:
+          validation: typed-unit-tests
+          test-summary-validation-data: |-
+            passed: 1
+            skipped: 1
+            failed: 0
+
+      - id: typed-metrics
+        uses: ./
+        with:
+          metrics-validation-data: |-
+            position: 10.0
+            speed: 15.0
+            acceleration: -0.2
