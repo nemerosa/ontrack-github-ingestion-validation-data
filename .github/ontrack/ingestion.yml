@@ -1,8 +1,8 @@
 general:
   validationJobPrefix: false
-workflows:
-  filter:
-    excludes: "Check dist"
+#workflows:
+#  filter:
+#    excludes: "Check dist"
 runs:
   enabled: true
 validations:
