@@ -7,23 +7,24 @@ on:
       - 'releases/*'
 
 jobs:
-  # unit tests
-  units:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - run: npm ci
-      - run: npm run lint
-      - run: npm run test
-
-  # test action works running from the graph
-  test:
+  build:
     runs-on: ubuntu-latest
     env:
       ONTRACK_URL: "${{ secrets.ONTRACK_URL }}"
       ONTRACK_TOKEN: "${{ secrets.ONTRACK_TOKEN }}"
     steps:
+
       - uses: actions/checkout@v3
+        id: checkout
+
+      - run: npm ci
+        id: build
+
+      - run: npm run lint
+        id: lint
+
+      - run: npm run test
+        id: test
 
       - id: tagging
         if: github.ref == 'refs/heads/main'
