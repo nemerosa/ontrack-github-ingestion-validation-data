@@ -2,7 +2,7 @@ general:
   validationJobPrefix: false
 workflows:
   filter:
-    excludes: "Close stale.*"
+    excludes: "Close stale.*|Publish.*"
 runs:
   enabled: true
 validations:
