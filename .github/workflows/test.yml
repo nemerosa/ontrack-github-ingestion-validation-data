@@ -6,6 +6,8 @@ on:
       - main
       - 'releases/*'
 
+concurrency: "test-${{ github.ref }}"
+
 jobs:
   build:
     runs-on: ubuntu-latest
