@@ -1,8 +1,8 @@
 general:
   validationJobPrefix: false
-#workflows:
-#  filter:
-#    excludes: "Check dist"
+workflows:
+  filter:
+    excludes: "Close stale.*"
 runs:
   enabled: true
 validations:
