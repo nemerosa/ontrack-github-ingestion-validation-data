@@ -2,24 +2,25 @@ general:
   validationJobPrefix: false
 workflows:
   filter:
-    excludes: "Close stale.*|Publish.*"
+    includes: build
 runs:
   enabled: true
 validations:
-  - name: typed-unit-tests
-    dataType:
-      type: test-summary
-      config:
-        warningIfSkipped: true
-  - name: typed-metrics
-    dataType:
-      type: metrics
+  - name: build-run
+    description: Complete CI build has run
+    image: nemerosa/ontrack-ingestion-assets/validations/build.png
 promotions:
-  - name: IRON
+  - name: BRONZE
+    description: Build OK
+    image: nemerosa/ontrack-ingestion-assets/promotions/bronze.png
     validations:
-      - typed-unit-tests
-  - name: SILVER
-    validations:
-      - typed-metrics
-    promotions:
-      - IRON
+      - build-run
+tagging:
+  strategies:
+    - type: latest
+casc:
+  project:
+    casc:
+      properties:
+        buildLinkDisplayProperty:
+          useLabel: true
