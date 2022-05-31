@@ -1,4 +1,3 @@
-const {fetch} = require('cross-fetch');
 const core = require('@actions/core');
 
 const ontrackClient = require('@nemerosa/ontrack-github-action-client');

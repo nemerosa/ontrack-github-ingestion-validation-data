@@ -4,7 +4,6 @@ require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 /***/ 3164:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const {fetch} = __nccwpck_require__(9805);
 const core = __nccwpck_require__(2186);
 
 const ontrackClient = __nccwpck_require__(7387);
