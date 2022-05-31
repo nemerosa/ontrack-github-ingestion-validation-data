@@ -26,7 +26,8 @@
     "@actions/glob": "^0.3.0",
     "cross-fetch": "^3.1.5",
     "fast-xml-parser": "^4.0.7",
-    "yaml": "^2.0.1"
+    "yaml": "^2.0.1",
+    "@nemerosa/ontrack-github-action-client": "^0.1.8"
   },
   "devDependencies": {
     "@semantic-release/changelog": "^6.0.1",

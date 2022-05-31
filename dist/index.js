@@ -7,48 +7,7 @@ require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 const {fetch} = __nccwpck_require__(9805);
 const core = __nccwpck_require__(2186);
 
-const checkEnvironment = (logging) => {
-    // URL
-    const url = process.env['ONTRACK_URL'];
-    if (!url) {
-        if (logging) core.info("ONTRACK_URL environment variable is not defined.")
-        return false;
-    }
-    // Token
-    const token = process.env['ONTRACK_TOKEN'];
-    if (!token) {
-        if (logging) core.info("ONTRACK_TOKEN secret is not defined.")
-        return false;
-    }
-    // OK
-    return {
-        url: url,
-        token: token,
-    };
-};
-
-const graphQL = async (clientEnvironment, query, variables, logging) => {
-    if (logging) {
-        console.log("Query: ", query);
-        console.log("Variables: ", variables);
-    }
-    const result = await fetch(`${clientEnvironment.url}/graphql`, {
-        method: "POST",
-        headers: {
-            'X-Ontrack-Token': clientEnvironment.token
-        },
-        credentials: "omit",
-        body: JSON.stringify({
-            query: query,
-            variables: variables
-        })
-    });
-    if (result.status >= 200 && result.status < 300) {
-        return result.json();
-    } else {
-        throw Error(`HTTP ${result.status}`);
-    }
-};
+const ontrackClient = __nccwpck_require__(7387);
 
 const setValidationDataByRunId = async (clientEnvironment, config, logging) => {
     if (logging) {
@@ -88,7 +47,7 @@ const setValidationDataByRunId = async (clientEnvironment, config, logging) => {
         validationStatus: config.validationStatus,
     };
     // GraphQL call
-    const result = await graphQL(
+    const result = await ontrackClient.graphQL(
         clientEnvironment,
         query,
         variables,
@@ -139,7 +98,7 @@ const setValidationDataByBuildName = async (clientEnvironment, config, logging) 
         validationStatus: config.validationStatus,
     };
     // GraphQL call
-    const result = await graphQL(
+    const result = await ontrackClient.graphQL(
         clientEnvironment,
         query,
         variables,
@@ -190,7 +149,7 @@ const setValidationDataByBuildLabel = async (clientEnvironment, config, logging)
         validationStatus: config.validationStatus,
     };
     // GraphQL call
-    const result = await graphQL(
+    const result = await ontrackClient.graphQL(
         clientEnvironment,
         query,
         variables,
@@ -214,7 +173,6 @@ const setValidationData = async (clientEnvironment, config, logging) => {
 };
 
 const client = {
-    checkEnvironment: checkEnvironment,
     setValidationData: setValidationData
 }
 
@@ -3274,6 +3232,65 @@ function checkBypass(reqUrl) {
     return false;
 }
 exports.checkBypass = checkBypass;
+
+
+/***/ }),
+
+/***/ 7387:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+const {fetch} = __nccwpck_require__(9805);
+
+const checkEnvironment = (logging) => {
+    // URL
+    const url = process.env['ONTRACK_URL'];
+    if (!url) {
+        if (logging) console.log("ONTRACK_URL environment variable is not defined.")
+        return false;
+    }
+    // Token
+    const token = process.env['ONTRACK_TOKEN'];
+    if (!token) {
+        if (logging) console.log("ONTRACK_TOKEN secret is not defined.")
+        return false;
+    }
+    // OK
+    return {
+        url: url,
+        token: token,
+    };
+};
+
+
+const graphQL = async (clientEnvironment, query, variables, logging) => {
+    if (logging) {
+        console.log("Query: ", query);
+        console.log("Variables: ", variables);
+    }
+    const result = await fetch(`${clientEnvironment.url}/graphql`, {
+        method: "POST",
+        headers: {
+            'X-Ontrack-Token': clientEnvironment.token
+        },
+        credentials: "omit",
+        body: JSON.stringify({
+            query: query,
+            variables: variables
+        })
+    });
+    if (result.status >= 200 && result.status < 300) {
+        return result.json();
+    } else {
+        throw Error(`HTTP ${result.status}`);
+    }
+};
+
+const client = {
+    checkEnvironment: checkEnvironment,
+    graphQL: graphQL
+}
+
+module.exports = client;
 
 
 /***/ }),
@@ -21786,6 +21803,8 @@ const junit = __nccwpck_require__(8138);
 const metrics = __nccwpck_require__(9610);
 const client = __nccwpck_require__(3164);
 
+const ontrackClient = __nccwpck_require__(7387);
+
 const parseMetricsValidationData = (path) => {
     const file = fs.readFileSync(path, 'utf8');
     return {
@@ -21809,7 +21828,7 @@ async function run() {
         const logging = core.getBooleanInput('logging');
 
         // Checks that the client is ready, if not just exit without doing anything
-        let clientEnvironment = client.checkEnvironment(logging);
+        let clientEnvironment = ontrackClient.checkEnvironment(logging);
         if (!clientEnvironment) {
             core.info("Ontrack is not configured. Not doing anything.");
             return;

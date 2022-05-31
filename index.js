@@ -8,6 +8,8 @@ const junit = require('./junit');
 const metrics = require('./metrics');
 const client = require('./client');
 
+const ontrackClient = require('@nemerosa/ontrack-github-action-client');
+
 const parseMetricsValidationData = (path) => {
     const file = fs.readFileSync(path, 'utf8');
     return {
@@ -31,7 +33,7 @@ async function run() {
         const logging = core.getBooleanInput('logging');
 
         // Checks that the client is ready, if not just exit without doing anything
-        let clientEnvironment = client.checkEnvironment(logging);
+        let clientEnvironment = ontrackClient.checkEnvironment(logging);
         if (!clientEnvironment) {
             core.info("Ontrack is not configured. Not doing anything.");
             return;
